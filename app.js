@@ -1,8 +1,12 @@
 const express = require('express');
 const mongooseConnection = require('./db/connection');
+var cors = require('cors');
 const api = require('./api/allApi');
 const app = express();
-
+app.set('view engine', 'ejs');
+ app.use(cors());
+// app.use(express.json());
+// app.options('*', cors());
 mongooseConnection.on('error', console.error.bind(console, 'MongoDB connection error:'));
 mongooseConnection.once('open', () => {
   console.log('Connected to MongoDB');
