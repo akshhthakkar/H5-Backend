@@ -25,6 +25,7 @@ The ERP System Backend is a robust and scalable API designed to support the fron
 * **Bcrypt.js:** For password hashing
 * **Dotenv:** For managing environment variables
 
+*Note: This project utilizes a personal MongoDB database for data storage.*
 
 ### Installation
 
@@ -40,4 +41,3 @@ The ERP System Backend is a robust and scalable API designed to support the fron
     # or
     yarn install
     ```
-
