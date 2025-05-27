@@ -9,7 +9,7 @@ The ERP System Backend is a robust and scalable API designed to support the fron
 ## Features
 
 * **User Authentication & Authorization:** Secure login, registration, and role-based access control.
-* **Module Management:** APIs for managing different ERP modules (e.g., Inventory, HR, Finance, CRM - *specify as per your modules*).
+* **Module Management:** APIs for managing different ERP modules (e.g., Inventory, HR, Finance etc).
 * **Data Persistence:** MongoDB for storing all application data.
 * **Scalable Architecture:** Designed for easy extension and addition of new functionalities.
 * **Error Handling:** Robust error management for API requests.
