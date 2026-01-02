@@ -33,7 +33,7 @@ router.get(
 router.get(
   "/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "http://localhost:5173/login?error=google_auth_failed",
+    failureRedirect: `${process.env.FRONTEND_URL}/login?error=google_auth_failed`,
     session: false,
   }),
   (req, res) => {
@@ -44,7 +44,7 @@ router.get(
       { expiresIn: "24h" }
     );
     // Redirect to Frontend
-    res.redirect(`http://localhost:5173/auth/callback?token=${token}`);
+    res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`);
   }
 );
 module.exports = router;
