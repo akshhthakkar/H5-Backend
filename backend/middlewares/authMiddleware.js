@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/config");
-const { errorResponse } = require("../repositories/userRepository"); // Or generic response helper
+const errorResponse = require("../responses/errorResponse");
 
 const verifyToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];

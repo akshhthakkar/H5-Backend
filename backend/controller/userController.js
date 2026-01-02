@@ -1,7 +1,8 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const userRepo = require("../repositories/userRepository");
+const successResponse = require("../responses/successResponse");
+const errorResponse = require("../responses/errorResponse");
 const config = require("../config/config");
 const fs = require("fs");
 const { OAuth2Client } = require("google-auth-library");
@@ -53,14 +54,14 @@ const userController = {
         { expiresIn: "24h" }
       );
 
-      userRepo.successResponse(
+      successResponse(
         res,
         { user, token: jwtToken },
         "Google Login Successful"
       );
     } catch (error) {
       console.error(error);
-      userRepo.errorResponse(res, 400, "Google Login Failed", error.message);
+      errorResponse(res, 400, "Google Login Failed", error.message);
     }
   },
 
@@ -81,7 +82,7 @@ const userController = {
         $or: [{ username }, { email }, { mobile }],
       });
       if (existingUser) {
-        return userRepo.errorResponse(
+        return errorResponse(
           res,
           400,
           "Username or email or mobile number already exists"
@@ -115,14 +116,14 @@ const userController = {
       );
 
       // Return success response with user and token
-      userRepo.successResponse(
+      successResponse(
         res,
         { user: savedUser.toObject(), token },
         "User registered successfully"
       );
     } catch (error) {
       console.error("Error registering user:", error);
-      userRepo.errorResponse(res, 500, "Internal Server Error");
+      errorResponse(res, 500, "Internal Server Error");
     }
   },
 
@@ -133,7 +134,7 @@ const userController = {
       // Find the user by username
       const user = await User.findOne({ username });
       if (!user) {
-        return userRepo.errorResponse(res, 401, "Invalid credentials");
+        return errorResponse(res, 401, "Invalid credentials");
       }
 
       // Compare the provided password with the hashed password
@@ -141,7 +142,7 @@ const userController = {
       const hash = user.password;
       console.log(password, "--", user.password, "----", user);
       if (!bcrypt.compareSync(password, user.password))
-        return userRepo.errorResponse(res, 401, "Invalid Credentials");
+        return errorResponse(res, 401, "Invalid Credentials");
 
       // Generate JWT token
       const token = jwt.sign(
@@ -151,14 +152,14 @@ const userController = {
       );
 
       // Return success response with user and token
-      userRepo.successResponse(
+      successResponse(
         res,
         { user: user.toObject(), token },
         "User logged in successfully"
       );
     } catch (error) {
       console.error("Error logging in user:", error);
-      userRepo.errorResponse(res, 500, "Internal Server Error");
+      errorResponse(res, 500, "Internal Server Error");
     }
   },
 
@@ -190,10 +191,10 @@ const userController = {
         runValidators: true, // Ensure validation rules are respected
       });
       if (!updatedUser) {
-        return userRepo.errorResponse(res, 404, "User not found");
+        return errorResponse(res, 404, "User not found");
       }
 
-      userRepo.successResponse(
+      successResponse(
         res,
         updatedUser.toObject(),
         "User profile updated successfully"
@@ -202,13 +203,13 @@ const userController = {
       console.error("Error updating user profile:", error);
       if (error.code === 11000) {
         const field = Object.keys(error.keyValue)[0];
-        return userRepo.errorResponse(
+        return errorResponse(
           res,
           400,
           `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`
         );
       }
-      userRepo.errorResponse(res, 500, "Internal Server Error");
+      errorResponse(res, 500, "Internal Server Error");
     }
   },
 
@@ -218,17 +219,17 @@ const userController = {
       const user = await User.findById(userId);
 
       if (!user) {
-        return userRepo.errorResponse(res, 404, "User not found");
+        return errorResponse(res, 404, "User not found");
       }
 
-      userRepo.successResponse(
+      successResponse(
         res,
         user.toObject(),
         "User profile fetched successfully"
       );
     } catch (error) {
       console.error("Error fetching user profile:", error);
-      userRepo.errorResponse(res, 500, "Internal Server Error");
+      errorResponse(res, 500, "Internal Server Error");
     }
   },
 };
