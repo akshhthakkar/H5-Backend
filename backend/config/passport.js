@@ -3,6 +3,11 @@ const User = require("../models/User");
 const config = require("./config");
 
 module.exports = (passport) => {
+  console.log(
+    "Google OAuth callback URL:",
+    `${process.env.BACKEND_URL}/api/user/google/callback`
+  );
+  
   passport.use(
     new GoogleStrategy(
       {
