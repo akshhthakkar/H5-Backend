@@ -1,5 +1,5 @@
-const Sales = require("../models/sales");
-const Product = require("../models/product");
+const Sales = require("../models/Sales");
+const Product = require("../models/Product");
 const successResponse = require("../responses/successResponse");
 const errorResponse = require("../responses/errorResponse");
 const mongoose = require("mongoose");

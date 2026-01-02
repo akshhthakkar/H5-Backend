@@ -4,9 +4,9 @@
  */
 
 const cron = require("node-cron");
-const Product = require("../models/product");
-const User = require("../models/user");
-const Sales = require("../models/sales");
+const Product = require("../models/Product");
+const User = require("../models/User");
+const Sales = require("../models/Sales");
 const notificationService = require("../utils/notificationService");
 
 /**
@@ -131,7 +131,7 @@ const checkLowStockForAllProducts = async () => {
 const retryFailedBills = async () => {
   console.log("[CRON] Retrying failed bills...");
   try {
-    const Sales = require("../models/sales");
+    const Sales = require("../models/Sales");
     const generateBillPDF = require("../src/billGenerator");
     const sendEmail = require("../src/emailSender");
     const cloudinaryUpload = require("../utils/cloudinaryUpload");

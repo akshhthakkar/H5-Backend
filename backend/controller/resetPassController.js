@@ -1,5 +1,5 @@
-const User = require("../models/user");
-const Token = require("../models/tokenModel");
+const User = require("../models/User");
+const Token = require("../models/TokenModel");
 const { sendPasswordResetEmail } = require("../utils/emailUtils");
 const crypto = require("crypto");
 const bcrypt = require("bcryptjs");

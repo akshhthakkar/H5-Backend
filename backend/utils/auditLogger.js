@@ -3,7 +3,7 @@
  * Creates audit log entries for entity changes
  */
 
-const AuditLog = require("../models/auditLog");
+const AuditLog = require("../models/AuditLog");
 
 const auditLogger = {
   /**

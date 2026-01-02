@@ -3,7 +3,7 @@
  * Seeds default SYSTEM categories on startup (idempotent)
  */
 
-const Category = require("../models/category");
+const Category = require("../models/Category");
 
 const DEFAULT_CATEGORIES = [
   "Groceries",

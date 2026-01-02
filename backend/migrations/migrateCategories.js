@@ -10,8 +10,8 @@ const mongoose = require("mongoose");
 const path = require("path");
 
 // Load models
-const Product = require("../models/product");
-const Category = require("../models/category");
+const Product = require("../models/Product");
+const Category = require("../models/Category");
 
 // MongoDB connection
 const MONGODB_URI =
