@@ -196,14 +196,18 @@ const salesController = {
         const emailSubject = "Your Purchase Receipt - H5 ERP";
         const emailBody = `Dear ${customer},\n\nThank you for your purchase!\n\nPlease find your bill attached to this email.\n\nIf you have any questions, please don't hesitate to contact us.\n\nBest regards,\nH5 ERP`;
 
-        // Send email with PDF attachment (local file before cleanup)
-        await sendEmail(customermail, emailSubject, emailBody, pdfFilePath);
-        console.log(`Email with PDF attachment sent to ${customermail}`);
+        // Send email (separate try/catch for clear error logging)
+        try {
+          await sendEmail(customermail, emailSubject, emailBody, pdfFilePath);
+          console.log("✅ Email sent to", customermail);
+        } catch (emailError) {
+          console.error("❌ Email sending failed:", emailError);
+        }
 
         // Clean up local file AFTER sending email
         fs.unlinkSync(pdfFilePath);
       } catch (uploadError) {
-        console.error("Cloudinary Upload or Email Error", uploadError);
+        console.error("❌ Cloudinary Upload Error:", uploadError);
 
         // Mark sales as FAILED for bill generation
         for (const sale of createdSales) {
