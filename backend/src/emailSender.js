@@ -1,30 +1,32 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 
-// Create transporter ONCE (singleton)
+// Create Resend SMTP transporter (ONCE)
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.resend.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: "resend",
+    pass: process.env.RESEND_API_KEY,
   },
 });
 
 // Verify connection on startup
 transporter.verify((error) => {
   if (error) {
-    console.error("❌ Email transporter error:", error);
+    console.error("❌ Resend SMTP error:", error);
   } else {
-    console.log("✅ Email transporter ready");
+    console.log("✅ Resend SMTP ready");
   }
 });
 
-async function sendEmail(userEmail, subject, body, attachmentPath) {
+async function sendEmail(to, subject, text, attachmentPath = null) {
   const mailOptions = {
-    from: `"H5 ERP" <${process.env.EMAIL_USER}>`,
-    to: userEmail,
+    from: `H5 ERP <${process.env.EMAIL_FROM}>`,
+    to,
     subject,
-    text: body,
+    text,
     attachments: attachmentPath
       ? [{ filename: "bill.pdf", path: attachmentPath }]
       : [],

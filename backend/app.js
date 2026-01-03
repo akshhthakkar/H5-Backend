@@ -3,6 +3,9 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 
+// Initialize email sender (verifies SMTP on startup)
+require("./src/emailSender");
+
 // Initialize Express app
 const app = express();
 
