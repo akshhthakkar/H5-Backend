@@ -198,10 +198,18 @@ const salesController = {
 
         // Send email (separate try/catch for clear error logging)
         try {
+          console.log("📧 Attempting to send email to:", customermail);
+          console.log("📎 PDF path:", pdfFilePath);
+          console.log("📧 EMAIL_FROM:", process.env.EMAIL_FROM);
+          console.log("🔑 BREVO_SMTP_USER:", process.env.BREVO_SMTP_USER ? "✅ Set" : "❌ Missing");
+          
           await sendEmail(customermail, emailSubject, emailBody, pdfFilePath);
-          console.log("✅ Email sent to", customermail);
+          console.log("✅ Email sent successfully to", customermail);
         } catch (emailError) {
-          console.error("❌ Email sending failed:", emailError);
+          console.error("❌ Email sending failed:");
+          console.error("Error message:", emailError.message);
+          console.error("Full error:", emailError);
+          // Don't throw - let sale continue even if email fails
         }
 
         // Clean up local file AFTER sending email
