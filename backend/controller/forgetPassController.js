@@ -13,7 +13,12 @@ exports.forgotPassword = async (req, res) => {
     const user = await User.findOne({ email: email });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      // Security: Don't reveal if email exists or not
+      // Return success message even if user doesn't exist
+      return res.status(200).json({
+        message:
+          "If that email exists, a password recovery link has been sent. Please check your email.",
+      });
     }
 
     // Delete any existing tokens associated with the user
@@ -34,7 +39,7 @@ exports.forgotPassword = async (req, res) => {
 
     return res.status(200).json({
       message:
-        "Password recovery link sent to your email, please check your email",
+        "If that email exists, a password recovery link has been sent. Please check your email.",
     });
   } catch (error) {
     console.log(error);
