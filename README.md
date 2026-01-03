@@ -1,297 +1,301 @@
-# H5 ERP System
+# H5 ERP Backend
 
-A full-stack Enterprise Resource Planning (ERP) system for inventory management, sales tracking, and business analytics.
+Enterprise Resource Planning system backend for inventory management, sales tracking, and business analytics.
 
-![Tech Stack](https://img.shields.io/badge/React-18-blue) ![Node.js](https://img.shields.io/badge/Node.js-Express-green) ![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-brightgreen)
-
----
-
-## 🚀 Features
-
-- **User Authentication** - JWT-based login/register with Google OAuth
-- **Inventory Management** - Add/edit/delete products with images
-- **Dynamic Categories** - System + custom user categories
-- **Sales Processing** - Create sales with automatic inventory deduction
-- **Bill Generation** - PDF bills emailed to customers
-- **Profit Tracking** - Cost price vs selling price analytics
-- **Reports & Analytics** - Monthly sales, top products, dead stock, profit summary
-- **Notifications** - Low stock alerts, forecast warnings
-- **Supply Chain** - Restock products containing smart suggestions based on sales forecast
-- **System Robustness** - Atomic sales transactions, deduplicated notifications, and handling of edge cases (zero sales, dead stock accuracy)
+![Node.js](https://img.shields.io/badge/Node.js-18+-green) ![Express](https://img.shields.io/badge/Express-4.18-blue) ![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-brightgreen)
 
 ---
 
-## 📁 Project Structure
+## 🏢 About
 
-```
-H5 ERP/
-├── backend/                    # Express.js API Server
-│   ├── api/allApi.js          # Route aggregator
-│   ├── app.js                 # Main entry point
-│   ├── config/                # Database & Cloudinary config
-│   ├── controller/            # Business logic
-│   │   ├── productController.js
-│   │   ├── salesController.js
-│   │   ├── categoryController.js
-│   │   ├── reportController.js
-│   │   └── ...
-│   ├── models/                # Mongoose schemas
-│   │   ├── product.js
-│   │   ├── sales.js
-│   │   ├── category.js
-│   │   ├── user.js
-│   │   └── ...
-│   ├── routes/                # Express routes
-│   ├── middlewares/           # Auth middleware
-│   ├── utils/                 # Helpers (notifications, cloudinary, audit)
-│   ├── jobs/cronJobs.js       # Scheduled tasks
-│   ├── seeds/                 # Database seeders
-│   ├── migrations/            # Data migration scripts
-│   └── src/
-│       ├── billGenerator.js   # PDF creation (PDFKit)
-│       └── emailSender.js     # Nodemailer
-│
+**Company:** Inframax
 
+**Contributors:**
 
-## 🔄 Application Flow
-
-### 1. Authentication Flow
-
-```
-
-User → SignIn/SignUp → JWT Token → Protected Routes
-↓
-Google OAuth (optional)
-
-```
-
-### 2. Inventory Flow
-
-```
-
-Add Product → Upload Image (Cloudinary)
-→ Set Prices (Sell Price + Cost Price)
-→ Assign Category
-→ Save to MongoDB
-
-```
-
-### 3. Sales Flow
-
-```
-
-Select Products → Validate Stock
-→ Deduct Inventory
-→ Create Sale Record
-→ Generate PDF Bill
-→ Upload to Cloudinary
-→ Email to Customer
-→ Trigger Notifications (if low stock)
-
-```
-
-### 4. Profit Calculation
-
-```
-
-Profit = Total Revenue - Total Cost
-= Σ(Sell Price × Quantity) - Σ(Cost Price × Quantity)
-
-````
+- [Aksh Thakkar](https://github.com/akshhthakkar)
+- [Krish Chaudhari](https://github.com/Krish231005)
+- [Vedant Bhatt](https://github.com/code-vedant1410)
 
 ---
 
-## 🛠️ Installation
+## ✨ Features
 
-### Prerequisites
+### 🔐 Authentication & Authorization
 
-- Node.js 18+
-- MongoDB (local or Atlas)
-- Cloudinary account
-- Gmail account (for emails)
+- JWT-based authentication with token refresh
+- Google OAuth 2.0 integration
+- Password reset via email with secure tokens
+- Role-based access control (Admin/User)
 
-### Backend Setup
+### 📦 Inventory Management
+
+- Complete CRUD operations for products
+- Image upload and management via Cloudinary CDN
+- Dynamic categorization (system + custom categories)
+- Real-time stock level tracking
+- Minimum stock threshold alerts
+- SKU and barcode support
+- Audit logging for all inventory changes
+
+### 💰 Sales Management
+
+- Atomic sales transactions (MongoDB sessions)
+- Automatic inventory deduction on sale
+- Professional PDF bill generation (PDFKit)
+- Email delivery of invoices to customers
+- Comprehensive sales history
+- Multi-product sales support
+- Customer information tracking
+
+### 📊 Analytics & Reporting
+
+- Monthly sales reports with trends
+- Top-performing products analysis
+- Dead stock identification
+- Profit margin analysis (cost vs selling price)
+- Sales forecasting based on historical data
+- Revenue and cost tracking
+- Date-range filtering for custom reports
+
+### 🔔 Smart Notifications
+
+- Low stock alerts (configurable thresholds)
+- Forecast-based restock warnings
+- Deduplicated notification system
+- Priority-based categorization
+- Read/unread status tracking
+- Auto-expiry for stale notifications
+
+### 🚚 Supply Chain Management
+
+- Restock functionality with supplier tracking
+- Smart restock suggestions based on sales forecast
+- Restock history and audit trail
+- Quantity tracking across restocks
+- Cost analysis per restock
+
+---
+
+## 🛠 Tech Stack
+
+- **Runtime:** Node.js v18+
+- **Framework:** Express.js v4.18
+- **Database:** MongoDB with Mongoose ODM
+- **Authentication:** JWT, Passport.js (Google OAuth 2.0), bcryptjs
+- **File Storage:** Cloudinary CDN
+- **Email Service:** Nodemailer
+- **PDF Generation:** PDFKit
+- **Scheduled Jobs:** node-cron
+- **HTTP Logging:** Morgan
+- **Security:** CORS, helmet (recommended), express-rate-limit (recommended)
+
+---
+
+## 🚀 Quick Start
 
 ```bash
-cd backend
+# Clone repository
+git clone https://github.com/akshhthakkar/H5-Backend.git
+cd H5-Backend/backend
+
+# Install dependencies
 npm install
 
-# Create .env file
+# Setup environment variables
 cp .env.example .env
 # Edit .env with your credentials
-````
 
-### Frontend Setup
+# Run development server
+npm run dev
 
-```bash
-cd frontend
-npm install
+# Production
+npm start
 ```
 
-### Environment Variables (.env)
+Server runs on `http://localhost:3000`
+
+---
+
+## 🔐 Environment Variables
 
 ```env
-# MongoDB
-MONGO_URI=mongodb://localhost:27017/h5erp
-# OR for Atlas:
-# MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/h5erp
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/h5-erp
+JWT_SECRET=your-secret-key
 
-# JWT
-JWT_SECRET=your-super-secret-key
-
-# Cloudinary
 CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_API_KEY=your-api-key
 CLOUDINARY_API_SECRET=your-api-secret
 
-# Email (Gmail)
 EMAIL_USER=your-email@gmail.com
-EMAIL_PASS=your-app-password
+EMAIL_PASSWORD=your-app-password
 
-# Google OAuth (optional)
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
-```
-
-### Running Locally
-
-```bash
-# Terminal 1 - Backend
-cd backend
-npm run dev   # or: npx nodemon server.js
-
-# Terminal 2 - Frontend
-cd frontend
-npm run dev
 ```
 
 ---
 
 ## 📡 API Endpoints
 
-| Method            | Endpoint                           | Description            |
-| ----------------- | ---------------------------------- | ---------------------- |
-| **Auth**          |                                    |                        |
-| POST              | `/api/user/register`               | Register new user      |
-| POST              | `/api/user/login`                  | Login                  |
-| GET               | `/api/user/google`                 | Google OAuth           |
-| **Products**      |                                    |                        |
-| GET               | `/api/products/getproducts`        | List all products      |
-| POST              | `/api/products/create`             | Create product         |
-| DELETE            | `/api/products/delete/:id`         | Delete product         |
-| POST              | `/api/products/supply`             | Add stock              |
-| **Categories**    |                                    |                        |
-| GET               | `/api/categories`                  | List categories        |
-| POST              | `/api/categories`                  | Create custom category |
-| PUT               | `/api/categories/:id`              | Update category        |
-| DELETE            | `/api/categories/:id`              | Delete category        |
-| **Sales**         |                                    |                        |
-| POST              | `/api/sales/create`                | Create sale            |
-| GET               | `/api/sales/show`                  | List all sales         |
-| GET               | `/api/sales/download/:id`          | Download bill          |
-| **Reports**       |                                    |                        |
-| GET               | `/api/report/monthly/:year/:month` | Monthly sales          |
-| GET               | `/api/report/top-products`         | Top 5 products         |
-| GET               | `/api/report/dead-stock`           | Dead stock report      |
-| GET               | `/api/report/profit-summary`       | Profit summary         |
-| **Notifications** |                                    |                        |
-| GET               | `/api/notifications`               | List notifications     |
-| PUT               | `/api/notifications/:id/read`      | Mark as read           |
+### Authentication
+
+- `POST /api/user/register` - Register user
+- `POST /api/user/login` - Login
+- `POST /api/user/google` - Google OAuth
+
+### Products
+
+- `GET /api/products` - List products
+- `POST /api/products` - Create product
+- `PUT /api/products/:id` - Update product
+- `DELETE /api/products/:id` - Delete product
+
+### Sales
+
+- `GET /api/sales` - List sales
+- `POST /api/sales` - Create sale
+
+### Reports
+
+- `GET /api/report/monthly-sales` - Monthly sales
+- `GET /api/report/top-products` - Top products
+- `GET /api/report/profit-summary` - Profit analysis
+
+### Categories
+
+- `GET /api/categories` - List categories
+- `POST /api/categories` - Create category
+- `PUT /api/categories/:id` - Update category
+- `DELETE /api/categories/:id` - Delete category
+
+### Notifications
+
+- `GET /api/notifications` - List notifications
+- `GET /api/notifications/unread` - Unread notifications
+- `PUT /api/notifications/:id/read` - Mark as read
+- `DELETE /api/notifications/:id` - Delete notification
+
+### Restock
+
+- `POST /api/restock` - Restock product
+- `GET /api/restock/suggestions` - Smart suggestions
+- `GET /api/restock/history` - Restock history
 
 ---
 
-## 🚀 Deployment Guide
+## 📁 Project Structure
 
-### Backend Deployment (Render / Railway / Heroku)
+````
+backend/
+├── api/
+│   └── allApi.js              # Central route aggregator
+├── app.js                     # Application entry point
+├── config/
+│   ├── cloudinaryConfig.js    # Cloudinary configuration
+│   ├── config.js              # App configuration
+│   └── passport.js            # OAuth strategies
+├── controller/
+│   ├── categoryController.js  # Category management
+│   ├── productController.js   # Product CRUD
+│   ├── salesController.js     # Sales transactions
+│   ├── reportController.js    # Analytics & reports
+│  🎯 Key Highlights
 
-1. **Build Command**: `npm install`
-2. **Start Command**: `node app.js`
-3. **Environment Variables**: Add all from `.env`
-
-### Frontend Deployment (Vercel / Netlify)
-
-1. **Build Command**: `npm run build`
-2. **Output Directory**: `dist`
-3. **Environment Variables**:
-   ```
-   VITE_API_URL=https://your-backend-url.com/api
-   ```
-
-### ⚠️ Pre-Deployment Checklist
-
-| Item                  | Status | Notes                                            |
-| --------------------- | ------ | ------------------------------------------------ |
-| Environment Variables | ⚠️     | Replace all `localhost:3000` with production URL |
-| API Base URL          | ⚠️     | Create `.env` for frontend with `VITE_API_URL`   |
-| CORS Settings         | ⚠️     | Update `app.js` to allow production domain       |
-| MongoDB               | ⚠️     | Use MongoDB Atlas for production                 |
-| Cloudinary            | ✅     | Already cloud-based                              |
-| Email                 | ✅     | Gmail works, consider SendGrid for production    |
-| JWT Secret            | ⚠️     | Use strong, unique secret                        |
-| HTTPS                 | ⚠️     | Required for production                          |
-
-### Required Changes for Production
-
-1. **Update API URLs** - Replace all `http://localhost:3000` in frontend:
-
-   ```javascript
-   // Create frontend/.env
-   VITE_API_URL=https://your-api.railway.app
-
-   // Update axios calls to use:
-   axios.get(`${import.meta.env.VITE_API_URL}/products/getproducts`)
-   ```
-
-2. **Update CORS** - In `backend/app.js`:
-
-   ```javascript
-   app.use(
-     cors({
-       origin: ["https://your-frontend.vercel.app"],
-       credentials: true,
-     })
-   );
-   ```
-
-3. **Use MongoDB Atlas** - Update `MONGO_URI` in production env
+- **Atomic Transactions** - MongoDB sessions ensure data consistency in sales
+- **Audit Trail** - Complete logging of critical operations with user tracking
+- **Automated Jobs** - Cron tasks for stock monitoring, cleanup, and reports
+- **Email Integration** - Automated bill delivery and password reset emails
+- **Cloud Storage** - Cloudinary CDN for optimized image delivery
+- **Error Handling** - Centralized error middleware with standardized responses
+- **Security** - Password hashing (bcrypt), JWT tokens, CORS protection
+- **Scalable** - Stateless authentication, microservice-ready architecture
 
 ---
 
-## 📊 Database Models
+## 🚀 Deployment
 
-| Model            | Key Fields                                             |
-| ---------------- | ------------------------------------------------------ |
-| **User**         | email, password, businessName, stats                   |
-| **Product**      | name, price, cp, inventory, categoryId, minThreshold   |
-| **Category**     | name, type (SYSTEM/CUSTOM), owner                      |
-| **Sales**        | customer, product, quantity, price, cp, amount, pdfUrl |
-| **Notification** | type, message, isRead, productId                       |
-| **AuditLog**     | action, entityType, before, after                      |
-| **RestockLog**   | productId, quantity, supplier                          |
+### Supported Platforms
+- Heroku
+- Railway
+- Render
+- AWS EC2
+- DigitalOcean
+- Docker/Kubernetes
 
----
+### Production Checklist
+- ✅ Set `NODE_ENV=production`
+- ✅ Use MongoDB Atlas (production database)
+- ✅ Configure CORS for production domain
+- ✅ Enable HTTPS/SSL certificates
+- ✅ Set strong JWT secret (32+ characters)
+- ✅ Configure production email service
+- ✅ Add rate limiting and helmet.js
+- ✅ Set up PM2 for process management
+- ✅ Enable database backups
+- ✅ Configure logging (Winston/Morgan)
 
-## 🔧 Scripts
+### Docker Deployment
+
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --production
+COPY . .
+EXPOSE 3000
+CMD ["node", "app.js"]
+````
 
 ```bash
-# Run category seeder (auto-runs on startup)
-node backend/seeds/categorySeeder.js
-
-# Migrate existing products to new category system
-node backend/migrations/migrateCategories.js
-
-# Clean database (use with caution!)
-node backend/scripts/cleanDB.js
+docker build -t h5-erp-backend .
+docker run -p 3000:3000 --env-file .env h5-erp-backend
 ```
 
+│ ├── User.js # User schema
+│ ├── Product.js # Product schema
+│ ├── Sales.js # Sales schema
+│ ├── Category.js # Category schema
+│ ├── Notification.js # Notification schema
+│ ├── AuditLog.js # Audit trail
+│ └── RestockLog.js # Restock history
+├── routes/
+│ ├── userRoutes.js # Auth endpoints
+│ ├── productRoutes.js # Product endpoints
+│ ├── salesRoutes.js # Sales endpoints
+│ ├── reportRoutes.js # Analytics endpoints
+│ └── categoryRoutes.js # Category endpoints
+├── src/
+│ ├── billGenerator.js # PDF generation
+│ └── emailSender.js # Email service
+└── utils/
+├── auditLogger.js # Audit logging
+├── cloudinaryUpload.js # Image upload
+├── jwtUtils.js # JWT helpers
+└── notificationService.js # Notification helpers
+
+```
+
+### Key Architecture Patterns
+- **MVC Pattern** - Clean separation of concerns
+- **Service Layer** - Reusable business logic
+- **Middleware Chain** - Request processing pipeline
+- **Repository Pattern** - Database abstraction with Mongoose
+
 ---
 
-## 📝 License
+## 🚀 Deployment
 
-MIT License - Free for personal and commercial use.
+Supports Heroku, Railway, AWS, DigitalOcean, Docker
+
+**Production checklist:**
+- Set `NODE_ENV=production`
+- Use MongoDB Atlas
+- Configure CORS for production domain
+- Enable HTTPS
+- Set strong JWT secret
 
 ---
 
-## 👨‍💻 Developed By
-
-**Inframax** - Powering Enterprise Solutions
+**Built with ❤️ by Inframax Team**
+```
