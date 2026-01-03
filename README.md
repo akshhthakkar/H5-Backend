@@ -9,10 +9,13 @@
 ![Cloudinary](https://img.shields.io/badge/Cloudinary-CDN-3448C5?logo=cloudinary)
 ![License](https://img.shields.io/badge/License-Proprietary-red)
 
+### 🚀 [Live Demo](https://h5-erp.vercel.app/)
+
 </div>
 
 A powerful, scalable backend API for enterprise resource planning, handling inventory management, sales transactions, billing, analytics, and supply chain operations.
 
+**Currently deployed at:** [https://h5-erp.vercel.app/](https://h5-erp.vercel.app/)
 ---
 
 ## ✨ Features
