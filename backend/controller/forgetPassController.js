@@ -21,6 +21,15 @@ exports.forgotPassword = async (req, res) => {
       });
     }
 
+    // Check if user has a password (not a Google OAuth user)
+    if (!user.password) {
+      // Google OAuth users don't have passwords
+      return res.status(200).json({
+        message:
+          "If that email exists, a password recovery link has been sent. Please check your email.",
+      });
+    }
+
     // Delete any existing tokens associated with the user
     let token = await Token.findOne({ userId: user._id });
     if (token) await token.deleteOne();

@@ -131,14 +131,24 @@ const userController = {
     try {
       const { username, password } = req.body;
 
-      // Find the user by username
-      const user = await User.findOne({ username });
+      // Find user by username OR email (flexible login)
+      const user = await User.findOne({
+        $or: [
+          { username: username },
+          { email: username } // Allow login with email too
+        ]
+      });
+
       if (!user) {
         return errorResponse(res, 401, "Invalid credentials");
       }
 
+      // Check if user has a password (not Google OAuth only)
+      if (!user.password) {
+        return errorResponse(res, 401, "This account uses Google Sign-In. Please use the Google login button.");
+      }
+
       // Compare the provided password with the hashed password
-      // Load hash from our password DB.
       const hash = user.password;
       console.log(password, "--", user.password, "----", user);
       if (!bcrypt.compareSync(password, user.password))
