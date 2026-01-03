@@ -1,20 +1,17 @@
-# H5 ERP Backend
+# Inframax ERP Backend
 
-Enterprise Resource Planning system backend for inventory management, sales tracking, and business analytics.
+<div align="center">
 
-![Node.js](https://img.shields.io/badge/Node.js-18+-green) ![Express](https://img.shields.io/badge/Express-4.18-blue) ![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-brightgreen)
+![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js)
+![Express](https://img.shields.io/badge/Express-4.18-000000?logo=express)
+![MongoDB](https://img.shields.io/badge/MongoDB-Mongoose-47A248?logo=mongodb)
+![JWT](https://img.shields.io/badge/JWT-Auth-000000?logo=jsonwebtokens)
+![Cloudinary](https://img.shields.io/badge/Cloudinary-CDN-3448C5?logo=cloudinary)
+![License](https://img.shields.io/badge/License-Proprietary-red)
 
----
+</div>
 
-## 🏢 About
-
-**Company:** Inframax
-
-**Contributors:**
-
-- [Aksh Thakkar](https://github.com/akshhthakkar)
-- [Krish Chaudhari](https://github.com/Krish231005)
-- [Vedant Bhatt](https://github.com/code-vedant1410)
+A powerful, scalable backend API for enterprise resource planning, handling inventory management, sales transactions, billing, analytics, and supply chain operations.
 
 ---
 
@@ -78,60 +75,108 @@ Enterprise Resource Planning system backend for inventory management, sales trac
 
 ## 🛠 Tech Stack
 
-- **Runtime:** Node.js v18+
-- **Framework:** Express.js v4.18
-- **Database:** MongoDB with Mongoose ODM
-- **Authentication:** JWT, Passport.js (Google OAuth 2.0), bcryptjs
-- **File Storage:** Cloudinary CDN
-- **Email Service:** Nodemailer
-- **PDF Generation:** PDFKit
-- **Scheduled Jobs:** node-cron
-- **HTTP Logging:** Morgan
-- **Security:** CORS, helmet (recommended), express-rate-limit (recommended)
+### Core
+
+- **Node.js** v18+ - JavaScript runtime environment
+- **Express.js** v4.18 - Fast, minimalist web framework
+- **MongoDB** - NoSQL database for scalable data storage
+- **Mongoose** - Elegant MongoDB object modeling
+
+### Authentication & Security
+
+- **JWT** - Secure token-based authentication
+- **Passport.js** - Google OAuth 2.0 integration
+- **bcryptjs** - Password hashing and encryption
+- **CORS** - Cross-origin resource sharing
+- **express-rate-limit** - API rate limiting
+- **helmet** - Security headers middleware
+
+### File & Media
+
+- **Cloudinary** - Cloud-based image storage and CDN
+- **Multer** - Multipart/form-data file upload handling
+- **PDFKit** - Professional PDF invoice generation
+
+### Email & Communication
+
+- **Nodemailer** - Email delivery service
+- **SMTP** - Automated invoice and password reset emails
+
+### Utilities
+
+- **node-cron** - Scheduled jobs for stock monitoring and cleanup
+- **Morgan** - HTTP request logging
+- **dotenv** - Environment variable management
+- **validator** - Data validation and sanitization
+
+### Development Tools
+
+- **nodemon** - Auto-restart on file changes
+- **ESLint** - Code quality and style enforcement
 
 ---
 
-## 🚀 Quick Start
+## � Installation
 
 ```bash
-# Clone repository
+# Clone the repository
 git clone https://github.com/akshhthakkar/H5-Backend.git
 cd H5-Backend/backend
 
 # Install dependencies
 npm install
 
-# Setup environment variables
-cp .env.example .env
-# Edit .env with your credentials
+# Set up environment variables
+# Create a .env file with required credentials (see below)
 
-# Run development server
+# Start development server
 npm run dev
-
-# Production
-npm start
 ```
 
-Server runs on `http://localhost:3000`
+## 🚀 Available Scripts
+
+- `npm run dev` - Start development server with nodemon on http://localhost:3000
+- `npm start` - Start production server
+- `npm run migrate` - Run database migrations
+- `npm run seed` - Seed database with initial data
+- `npm run lint` - Run ESLint for code quality
 
 ---
 
 ## 🔐 Environment Variables
 
-```env
-PORT=3000
-MONGO_URI=mongodb://localhost:27017/h5-erp
-JWT_SECRET=your-secret-key
+Create a `.env` file in the backend directory:
 
+```env
+# Server Configuration
+PORT=3000
+NODE_ENV=development
+
+# Database
+MONGO_URI=mongodb://localhost:27017/h5-erp
+
+# Authentication
+JWT_SECRET=your-secret-key-min-32-characters
+JWT_EXPIRES_IN=7d
+REFRESH_TOKEN_SECRET=your-refresh-token-secret
+
+# Google OAuth
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_CALLBACK_URL=http://localhost:3000/api/user/google/callback
+
+# Cloudinary CDN
 CLOUDINARY_CLOUD_NAME=your-cloud-name
 CLOUDINARY_API_KEY=your-api-key
 CLOUDINARY_API_SECRET=your-api-secret
 
+# Email Service
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASSWORD=your-app-password
+EMAIL_FROM=noreply@inframax.com
 
-GOOGLE_CLIENT_ID=your-google-client-id
-GOOGLE_CLIENT_SECRET=your-google-client-secret
+# Frontend URL (for CORS)
+FRONTEND_URL=http://localhost:5173
 ```
 
 ---
@@ -140,100 +185,196 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 
 ### Authentication
 
-- `POST /api/user/register` - Register user
-- `POST /api/user/login` - Login
-- `POST /api/user/google` - Google OAuth
+- `POST /api/user/register` - Register new user
+- `POST /api/user/login` - Login with email/password
+- `GET /api/user/google` - Initiate Google OAuth flow
+- `GET /api/user/google/callback` - Google OAuth callback
+- `POST /api/user/refresh-token` - Refresh JWT token
+- `POST /api/user/logout` - Logout user
+- `GET /api/user/profile` - Get user profile
+- `PUT /api/user/profile` - Update user profile
+
+### Password Management
+
+- `POST /api/forget-password` - Request password reset email
+- `POST /api/reset-password/:token` - Reset password with token
+- `PUT /api/user/change-password` - Change password (authenticated)
 
 ### Products
 
-- `GET /api/products` - List products
-- `POST /api/products` - Create product
-- `PUT /api/products/:id` - Update product
-- `DELETE /api/products/:id` - Delete product
-
-### Sales
-
-- `GET /api/sales` - List sales
-- `POST /api/sales` - Create sale
-
-### Reports
-
-- `GET /api/report/monthly-sales` - Monthly sales
-- `GET /api/report/top-products` - Top products
-- `GET /api/report/profit-summary` - Profit analysis
+- `GET /api/products` - List all products (supports pagination, filtering)
+- `GET /api/products/:id` - Get single product
+- `POST /api/products` - Create new product (admin only)
+- `PUT /api/products/:id` - Update product (admin only)
+- `DELETE /api/products/:id` - Delete product (admin only)
+- `GET /api/products/low-stock` - Get low stock products
+- `GET /api/products/search?q=query` - Search products
 
 ### Categories
 
-- `GET /api/categories` - List categories
-- `POST /api/categories` - Create category
-- `PUT /api/categories/:id` - Update category
-- `DELETE /api/categories/:id` - Delete category
+- `GET /api/categories` - List all categories
+- `GET /api/categories/:id` - Get single category
+- `POST /api/categories` - Create category (admin only)
+- `PUT /api/categories/:id` - Update category (admin only)
+- `DELETE /api/categories/:id` - Delete category (admin only)
+
+### Sales
+
+- `GET /api/sales` - List all sales (supports date filtering)
+- `GET /api/sales/:id` - Get single sale
+- `POST /api/sales` - Create new sale (generates invoice)
+- `GET /api/sales/customer/:email` - Get customer purchase history
+- `DELETE /api/sales/:id` - Delete sale (admin only)
+
+### Reports & Analytics
+
+- `GET /api/report/monthly-sales` - Monthly sales report
+- `GET /api/report/top-products` - Top performing products
+- `GET /api/report/profit-summary` - Profit and revenue analysis
+- `GET /api/report/dead-stock` - Identify slow-moving inventory
+- `GET /api/report/sales-forecast` - Sales predictions based on trends
+- `GET /api/report/category-performance` - Sales by category
 
 ### Notifications
 
-- `GET /api/notifications` - List notifications
-- `GET /api/notifications/unread` - Unread notifications
-- `PUT /api/notifications/:id/read` - Mark as read
-- `DELETE /api/notifications/:id` - Delete notification
+- `GET /api/notifications` - List all notifications
+- `GET /api/notifications/unread` - Get unread notifications count
+- `PUT /api/notifications/:id/read` - Mark notification as read
+- `PUT /api/notifications/read-all` - Mark all as read
+- `DELETE /api/notifications/:id` - Delete single notification
+- `DELETE /api/notifications/clear-all` - Clear all notifications
 
-### Restock
+### Restock & Supply Chain
 
-- `POST /api/restock` - Restock product
-- `GET /api/restock/suggestions` - Smart suggestions
-- `GET /api/restock/history` - Restock history
+- `POST /api/restock` - Add stock to product
+- `GET /api/restock/suggestions` - AI-powered restock suggestions
+- `GET /api/restock/history` - Complete restock history
+- `GET /api/restock/history/:productId` - Restock history for product
+
+### File Upload
+
+- `POST /api/upload/image` - Upload product image to Cloudinary
+- `DELETE /api/upload/image/:publicId` - Delete image from Cloudinary
 
 ---
 
 ## 📁 Project Structure
 
-````
+```
 backend/
 ├── api/
-│   └── allApi.js              # Central route aggregator
-├── app.js                     # Application entry point
+│   └── allApi.js                  # Central route aggregator
+├── app.js                         # Application entry point
 ├── config/
-│   ├── cloudinaryConfig.js    # Cloudinary configuration
-│   ├── config.js              # App configuration
-│   └── passport.js            # OAuth strategies
+│   ├── cloudinaryConfig.js        # Cloudinary CDN configuration
+│   ├── config.js                  # App-wide configuration
+│   └── passport.js                # OAuth 2.0 strategies
 ├── controller/
-│   ├── categoryController.js  # Category management
-│   ├── productController.js   # Product CRUD
-│   ├── salesController.js     # Sales transactions
-│   ├── reportController.js    # Analytics & reports
-│  🎯 Key Highlights
+│   ├── categoryController.js      # Category CRUD operations
+│   ├── productController.js       # Product management logic
+│   ├── salesController.js         # Sales transaction handling
+│   ├── reportController.js        # Analytics & reporting
+│   ├── userController.js          # User management
+│   ├── notificationController.js  # Notification handling
+│   ├── uploadController.js        # File upload processing
+│   ├── forgetPassController.js    # Password reset request
+│   └── resetPassController.js     # Password reset confirmation
+├── db/
+│   └── connection.js              # MongoDB connection setup
+├── jobs/
+│   └── cronJobs.js                # Scheduled background tasks
+├── middlewares/
+│   ├── authMiddleware.js          # JWT authentication guard
+│   └── errormiddleware.js         # Global error handler
+├── migrations/
+│   └── migrateCategories.js       # Database migration scripts
+├── models/
+│   ├── User.js                    # User schema & methods
+│   ├── Product.js                 # Product schema
+│   ├── Sales.js                   # Sales transaction schema
+│   ├── Category.js                # Category schema
+│   ├── Notification.js            # Notification schema
+│   ├── AuditLog.js                # Audit trail schema
+│   ├── RestockLog.js              # Restock history schema
+│   ├── ProductImage.js            # Product image metadata
+│   └── TokenModel.js              # Refresh token schema
+├── pdfs/                          # Generated PDF invoices
+├── responses/
+│   ├── errorResponse.js           # Standardized error responses
+│   └── successResponse.js         # Standardized success responses
+├── routes/
+│   ├── userRoutes.js              # Authentication endpoints
+│   ├── productRoutes.js           # Product endpoints
+│   ├── salesRoutes.js             # Sales endpoints
+│   ├── reportRoutes.js            # Analytics endpoints
+│   ├── categoryRoutes.js          # Category endpoints
+│   ├── notificationRoutes.js      # Notification endpoints
+│   ├── restockRoutes.js           # Restock endpoints
+│   ├── uploadRoutes.js            # File upload endpoints
+│   ├── forgetPassRoutes.js        # Password reset request
+│   └── resetPassRoutes.js         # Password reset confirmation
+├── scripts/
+│   └── cleanDB.js                 # Database cleanup utilities
+├── seeds/
+│   └── categorySeeder.js          # Initial category data
+├── src/
+│   ├── billGenerator.js           # PDF invoice generation
+│   └── emailSender.js             # Email service wrapper
+├── utils/
+│   ├── auditLogger.js             # Audit trail logging
+│   ├── cloudinaryUpload.js        # Cloudinary upload helper
+│   ├── emailUtils.js              # Email templates & utilities
+│   ├── jwtUtils.js                # JWT token generation/validation
+│   └── notificationService.js     # Notification creation helper
+├── package.json                   # Dependencies and scripts
+└── .env                           # Environment variables
+```
 
-- **Atomic Transactions** - MongoDB sessions ensure data consistency in sales
-- **Audit Trail** - Complete logging of critical operations with user tracking
-- **Automated Jobs** - Cron tasks for stock monitoring, cleanup, and reports
-- **Email Integration** - Automated bill delivery and password reset emails
-- **Cloud Storage** - Cloudinary CDN for optimized image delivery
-- **Error Handling** - Centralized error middleware with standardized responses
-- **Security** - Password hashing (bcrypt), JWT tokens, CORS protection
-- **Scalable** - Stateless authentication, microservice-ready architecture
+### Key Architecture Patterns
+
+- **MVC Pattern** - Clean separation of concerns (Models, Controllers, Routes)
+- **Service Layer** - Reusable business logic in utils and src
+- **Middleware Chain** - Request processing pipeline (auth, validation, error handling)
+- **Repository Pattern** - Database abstraction with Mongoose models
+- **Dependency Injection** - Configuration management via config files
 
 ---
 
-## 🚀 Deployment
+## 🎯 Key Highlights
 
-### Supported Platforms
-- Heroku
-- Railway
-- Render
-- AWS EC2
-- DigitalOcean
-- Docker/Kubernetes
+- ⚡ **High Performance** - Optimized MongoDB queries with indexing and aggregation
+- 🔒 **Enterprise Security** - JWT authentication, bcrypt hashing, CORS, rate limiting
+- 📊 **Data Integrity** - Atomic transactions with MongoDB sessions
+- 🎯 **Smart Analytics** - AI-powered sales forecasting and inventory optimization
+- 📧 **Automated Communication** - Email invoices and password reset flows
+- ☁️ **Cloud Native** - Cloudinary CDN for scalable media storage
+- 🔔 **Real-time Notifications** - Smart alerts for low stock and business events
+- 📝 **Audit Trail** - Complete logging of critical operations with user tracking
+- ⏰ **Background Jobs** - Cron tasks for stock monitoring and cleanup
+- 🛡️ **Error Handling** - Centralized middleware with standardized responses
+- 🚀 **Scalable Architecture** - Stateless design, microservice-ready
+- 📱 **RESTful API** - Clean, consistent endpoint structure
+
+---
+
+## 🌐 Deployment
+
+Configured for Heroku, Railway, Render, and Docker deployment.
 
 ### Production Checklist
+
 - ✅ Set `NODE_ENV=production`
-- ✅ Use MongoDB Atlas (production database)
-- ✅ Configure CORS for production domain
+- ✅ Use MongoDB Atlas for production database
+- ✅ Configure CORS for production frontend domain
 - ✅ Enable HTTPS/SSL certificates
 - ✅ Set strong JWT secret (32+ characters)
-- ✅ Configure production email service
-- ✅ Add rate limiting and helmet.js
+- ✅ Configure production email service (SendGrid, Mailgun, etc.)
+- ✅ Add rate limiting and helmet.js security headers
 - ✅ Set up PM2 for process management
-- ✅ Enable database backups
-- ✅ Configure logging (Winston/Morgan)
+- ✅ Enable MongoDB Atlas backups
+- ✅ Configure logging (Winston/Morgan to file or cloud service)
+- ✅ Set up monitoring (New Relic, Datadog, etc.)
+- ✅ Configure Cloudinary production environment
 
 ### Docker Deployment
 
@@ -245,57 +386,52 @@ RUN npm ci --production
 COPY . .
 EXPOSE 3000
 CMD ["node", "app.js"]
-````
+```
 
 ```bash
-docker build -t h5-erp-backend .
-docker run -p 3000:3000 --env-file .env h5-erp-backend
+docker build -t inframax-erp-backend .
+docker run -p 3000:3000 --env-file .env inframax-erp-backend
 ```
 
-│ ├── User.js # User schema
-│ ├── Product.js # Product schema
-│ ├── Sales.js # Sales schema
-│ ├── Category.js # Category schema
-│ ├── Notification.js # Notification schema
-│ ├── AuditLog.js # Audit trail
-│ └── RestockLog.js # Restock history
-├── routes/
-│ ├── userRoutes.js # Auth endpoints
-│ ├── productRoutes.js # Product endpoints
-│ ├── salesRoutes.js # Sales endpoints
-│ ├── reportRoutes.js # Analytics endpoints
-│ └── categoryRoutes.js # Category endpoints
-├── src/
-│ ├── billGenerator.js # PDF generation
-│ └── emailSender.js # Email service
-└── utils/
-├── auditLogger.js # Audit logging
-├── cloudinaryUpload.js # Image upload
-├── jwtUtils.js # JWT helpers
-└── notificationService.js # Notification helpers
+### Heroku Deployment
 
+```bash
+# Login to Heroku
+heroku login
+
+# Create new app
+heroku create inframax-erp-api
+
+# Add MongoDB Atlas add-on (or use existing Atlas cluster)
+heroku addons:create mongolab:sandbox
+
+# Set environment variables
+heroku config:set JWT_SECRET=your-secret
+heroku config:set CLOUDINARY_CLOUD_NAME=your-cloud
+# ... set other variables
+
+# Deploy
+git push heroku main
 ```
 
-### Key Architecture Patterns
-- **MVC Pattern** - Clean separation of concerns
-- **Service Layer** - Reusable business logic
-- **Middleware Chain** - Request processing pipeline
-- **Repository Pattern** - Database abstraction with Mongoose
+### Other Platforms
+
+Compatible with Railway, Render, AWS EC2, DigitalOcean, and other Node.js hosting services.
+
+**Build Configuration:**
+
+- Start Command: `node app.js` or `npm start`
+- Node Version: 18.x or higher
+- Build Command: `npm install` (if needed)
 
 ---
 
-## 🚀 Deployment
+## 👥 Contributors
 
-Supports Heroku, Railway, AWS, DigitalOcean, Docker
-
-**Production checklist:**
-- Set `NODE_ENV=production`
-- Use MongoDB Atlas
-- Configure CORS for production domain
-- Enable HTTPS
-- Set strong JWT secret
+- **Aksh Thakkar** - [@akshhthakkar](https://github.com/akshhthakkar)
+- **Krish Chaudhari** - [@Krish231005](https://github.com/Krish231005)
+- **Vedant Bhatt** - [@code-vedant1410](https://github.com/code-vedant1410)
 
 ---
 
 **Built with ❤️ by Inframax Team**
-```
