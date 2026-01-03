@@ -1,14 +1,14 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 
-// Create Resend SMTP transporter
+// Create Brevo SMTP transporter
 const transporter = nodemailer.createTransport({
-  host: "smtp.resend.com",
+  host: "smtp-relay.brevo.com",
   port: 587,
   secure: false,
   auth: {
-    user: "resend",
-    pass: process.env.RESEND_API_KEY,
+    user: process.env.BREVO_SMTP_USER,
+    pass: process.env.BREVO_SMTP_PASS,
   },
 });
 
