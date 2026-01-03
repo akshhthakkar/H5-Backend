@@ -121,15 +121,17 @@ const salesController = {
         const savedSale = await newSale.save();
         createdSales.push(savedSale);
 
-        // Audit log
-        await auditLogger.log(
+        // Audit log (async - non-blocking)
+        auditLogger.log(
           owner,
           "CREATE_SALE",
           "sale",
           savedSale._id,
           null,
           savedSale.toObject()
-        );
+        )
+          .then(() => console.log("✅ Audit log saved for sale", savedSale._id))
+          .catch(err => console.error("❌ Audit log failed:", err.message));
 
         // Fetch product image for bill
         const productImage = await ProductImage.findOne({
@@ -142,17 +144,23 @@ const salesController = {
         });
 
         // ============ PHASE 3: TRIGGER NOTIFICATIONS ============
-        // Check low stock
-        await notificationService.checkLowStock(product, owner);
+        // Check low stock (async - non-blocking)
+        notificationService.checkLowStock(product, owner)
+          .then(() => console.log("✅ Low stock check completed"))
+          .catch(err => console.error("❌ Low stock check failed:", err.message));
 
-        // Check forecast warning
-        await notificationService.checkForecast(product, owner);
+        // Check forecast warning (async - non-blocking)
+        notificationService.checkForecast(product, owner)
+          .then(() => console.log("✅ Forecast check completed"))
+          .catch(err => console.error("❌ Forecast check failed:", err.message));
       }
 
-      // Update user stats
-      await User.findByIdAndUpdate(owner, {
+      // Update user stats (async - non-blocking)
+      User.findByIdAndUpdate(owner, {
         $inc: { "stats.totalSalesCreated": createdSales.length },
-      });
+      })
+        .then(() => console.log("✅ User stats updated"))
+        .catch(err => console.error("❌ User stats update failed:", err.message));
 
       // ============ PHASE 4: GENERATE BILL PDF ============
       const billData = {
@@ -196,24 +204,30 @@ const salesController = {
         const emailSubject = "Your Purchase Receipt - H5 ERP";
         const emailBody = `Dear ${customer},\n\nThank you for your purchase!\n\nPlease find your bill attached to this email.\n\nIf you have any questions, please don't hesitate to contact us.\n\nBest regards,\nH5 ERP`;
 
-        // Send email (separate try/catch for clear error logging)
-        try {
-          console.log("📧 Attempting to send email to:", customermail);
-          console.log("📎 PDF path:", pdfFilePath);
-          console.log("📧 EMAIL_FROM:", process.env.EMAIL_FROM);
-          console.log("🔑 BREVO_SMTP_USER:", process.env.BREVO_SMTP_USER ? "✅ Set" : "❌ Missing");
-          
-          await sendEmail(customermail, emailSubject, emailBody, pdfFilePath);
-          console.log("✅ Email sent successfully to", customermail);
-        } catch (emailError) {
-          console.error("❌ Email sending failed:");
-          console.error("Error message:", emailError.message);
-          console.error("Full error:", emailError);
-          // Don't throw - let sale continue even if email fails
-        }
-
-        // Clean up local file AFTER sending email
-        fs.unlinkSync(pdfFilePath);
+        // Send email asynchronously (non-blocking)
+        console.log("📧 Attempting to send email to:", customermail);
+        console.log("📎 PDF path:", pdfFilePath);
+        console.log("📧 EMAIL_FROM:", process.env.EMAIL_FROM);
+        console.log("🔑 BREVO_SMTP_USER:", process.env.BREVO_SMTP_USER ? "✅ Set" : "❌ Missing");
+        
+        sendEmail(customermail, emailSubject, emailBody, pdfFilePath)
+          .then(() => {
+            console.log("✅ Email sent successfully to", customermail);
+            // Clean up local file after email is sent
+            if (fs.existsSync(pdfFilePath)) {
+              fs.unlinkSync(pdfFilePath);
+              console.log("🗑️ PDF file cleaned up");
+            }
+          })
+          .catch(emailError => {
+            console.error("❌ Email sending failed:");
+            console.error("Error message:", emailError.message);
+            console.error("Full error:", emailError);
+            // Clean up file even on failure
+            if (fs.existsSync(pdfFilePath)) {
+              fs.unlinkSync(pdfFilePath);
+            }
+          });
       } catch (uploadError) {
         console.error("❌ Cloudinary Upload Error:", uploadError);
 

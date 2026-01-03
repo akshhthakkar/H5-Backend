@@ -53,15 +53,17 @@ router.post("/", verifyToken, async (req, res) => {
     });
     await restockLog.save();
 
-    // Audit log
-    await auditLogger.log(
+    // Audit log (async - non-blocking)
+    auditLogger.log(
       userId,
       "RESTOCK",
       "inventory",
       product._id,
       beforeState,
       product.toObject()
-    );
+    )
+      .then(() => console.log("✅ Audit log saved for restock", product._id))
+      .catch(err => console.error("❌ Audit log failed:", err.message));
 
     successResponse(res, { product, restockLog }, "Stock added successfully");
   } catch (error) {

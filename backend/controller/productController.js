@@ -108,20 +108,24 @@ const productController = {
       savedProductImage.productId = savedProduct._id;
       await savedProductImage.save();
 
-      // Update user stats
-      await User.findByIdAndUpdate(owner, {
+      // Update user stats (async - non-blocking)
+      User.findByIdAndUpdate(owner, {
         $inc: { "stats.totalProductsAdded": 1 },
-      });
+      })
+        .then(() => console.log("✅ User stats updated"))
+        .catch(err => console.error("❌ User stats update failed:", err.message));
 
-      // Audit log
-      await auditLogger.log(
+      // Audit log (async - non-blocking)
+      auditLogger.log(
         owner,
         "CREATE_PRODUCT",
         "product",
         savedProduct._id,
         null,
         savedProduct.toObject()
-      );
+      )
+        .then(() => console.log("✅ Audit log saved for product", savedProduct._id))
+        .catch(err => console.error("❌ Audit log failed:", err.message));
 
       successResponse(
         res,

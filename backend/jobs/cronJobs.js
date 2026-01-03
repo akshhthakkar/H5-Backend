@@ -58,7 +58,9 @@ const checkDeadStockForAllUsers = async () => {
     const users = await User.find({});
 
     for (const user of users) {
-      await notificationService.checkDeadStock(user._id);
+      notificationService.checkDeadStock(user._id)
+        .then(() => console.log("✅ Dead stock check completed for user", user._id))
+        .catch(err => console.error("❌ Dead stock check failed:", err.message));
     }
 
     console.log(`[CRON] Dead stock check completed for ${users.length} users`);
@@ -77,7 +79,9 @@ const checkForecastWarningsForAllUsers = async () => {
     const products = await Product.find({ dailySalesAvg: { $gt: 0 } });
 
     for (const product of products) {
-      await notificationService.checkForecast(product, product.owner);
+      notificationService.checkForecast(product, product.owner)
+        .then(() => console.log("✅ Forecast check completed for product", product._id))
+        .catch(err => console.error("❌ Forecast check failed:", err.message));
     }
 
     console.log(
@@ -106,13 +110,17 @@ const checkLowStockForAllProducts = async () => {
         const suggestedQty = Math.ceil(product.dailySalesAvg * leadTime);
 
         if (suggestedQty > 0) {
-          await notificationService.createRestockReminder(
+          notificationService.createRestockReminder(
             product,
             product.owner,
             suggestedQty
-          );
+          )
+            .then(() => console.log("✅ Restock reminder created"))
+            .catch(err => console.error("❌ Restock reminder failed:", err.message));
         } else {
-          await notificationService.checkLowStock(product, product.owner);
+          notificationService.checkLowStock(product, product.owner)
+            .then(() => console.log("✅ Low stock notification created"))
+            .catch(err => console.error("❌ Low stock notification failed:", err.message));
         }
       }
     }
@@ -178,12 +186,16 @@ const retryFailedBills = async () => {
         const emailSubject = "Your Purchase Receipt - H5 ERP";
         const emailBody = `Dear ${sale.customer},\n\nThank you for your purchase!\n\nPlease find your bill attached to this email.\n\nIf you have any questions, please don't hesitate to contact us.\n\nBest regards,\nH5 ERP`;
 
-        await sendEmail(
+        // Send email asynchronously (non-blocking)
+        sendEmail(
           sale.customermail,
           emailSubject,
           emailBody,
           pdfFilePath
-        );
+        )
+          .then(() => console.log(`✅ [CRON] Email sent for sale ${sale._id}`))
+          .catch(err => console.error(`❌ [CRON] Email failed for sale ${sale._id}:`, err.message));
+        
         console.log(`[CRON] Retry successful for sale ${sale._id}`);
 
         fs.unlinkSync(pdfFilePath);
