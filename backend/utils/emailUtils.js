@@ -1,12 +1,14 @@
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 
-// Create a Nodemailer transporter using environment variables
+// Create Resend SMTP transporter
 const transporter = nodemailer.createTransport({
-  service: "Gmail",
+  host: "smtp.resend.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
+    user: "resend",
+    pass: process.env.RESEND_API_KEY,
   },
 });
 
@@ -14,7 +16,7 @@ const transporter = nodemailer.createTransport({
 async function sendPasswordResetEmail(email, resetLink) {
   try {
     await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+      from: `H5 ERP <${process.env.EMAIL_FROM}>`,
       to: email,
       subject: "Password Reset Request",
       html: `
